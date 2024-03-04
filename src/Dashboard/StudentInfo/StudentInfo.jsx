@@ -1,40 +1,58 @@
 import React from 'react';
 import person from "../../assets/person.png";
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { userdelete } from '../../UserReducer'
+
 
 
 const StudentInfo = () => {
+    const users = useSelector((state) => state.users)
+    const dispatch = useDispatch() 
+    const handleDelect = (id) => {
+      dispatch(userdelete({id : id}))
+
+    }
   return (
     <div>
       <div className='px-10 py-10 bg-gray-100'>
         <div className='flex justify-between bg-gray-100 '>
           <h1 className='font-[700] text-[22px] leading-[26px] text-black'>Students List</h1>
           <div>
-            <Link to="/update" className=' p-4 font-[400] text-center text-[14px] h-[44px] rounded-[4px] w-[199px] bg-[#FFA500] '>ADD NEW STUDENT</Link>
+            <Link to="update" className=' p-4 font-[400] text-center text-[14px] h-[44px] rounded-[4px] w-[199px] bg-[#FFA500] '>ADD NEW STUDENT</Link>
           </div>
         </div>
-        <table className="w-full border-collapse my-4">
-          <thead>
-            <tr>
-              <th className="py-2 px-14 bg-gray-100 text-[12px] font-[600]">Name</th>
-              <th className="py-2 bg-gray-100 text-[12px] font-[600] text-left">Email</th>
-              <th className="py-2 bg-gray-100 text-[12px] font-[600] text-left">Phone</th>
-              <th className="py-2 bg-gray-100 text-[12px] font-[600] text-left">Email Number</th>
-              <th className="py-2 bg-gray-100 text-[12px] font-[600] text-left">Date Of Admission</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="py-2 flex items-center gap-8"><img src={person} alt="" className='w-[65px] h-[55px] rounded-[8px] object-cover' /> <p>John Doe</p></td>
-              <td className="py-2 px-2 text-left">keny</td>
-              <td className="py-2 px-2 text-left">08130197838</td>
-              <td className="py-2 px-2 text-left">olaatunbikehinde@gmail.com</td>
-              <td className="py-2 px-2 text-left">1234567305477760</td>
-              <td className="py-2 px-2 text-left"><i className="fa-solid fa-pen"></i></td>
-              <td className="py-2 px-2 text-left"><i className="fa-solid fa-trash"></i></td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+                    <table id="studentTable" className="table-auto w-full">
+                        <thead className="bg-gray-100">
+                            <tr>
+                                <th className="px-4 py-2">Name</th>
+                                <th className="px-4 py-2">Email</th>
+                                <th className="px-4 py-2">Phone</th>
+                                <th className="px-4 py-2">Email Number</th>
+                                <th className="px-4 py-2">Date Of Admission</th>
+                                <th className="px-4 py-2">Edit</th>
+                                <th className="px-4 py-2">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user, index) => (
+                                <tr key={index} className="bg-white hover:bg-gray-100 mb-2">
+                                    <td className="border px-4 py-2">{user.name}</td>
+                                    <td className="border px-4 py-4">{user.email}</td>
+                                    <td className="border px-4 py-4">{user.phone}</td>
+                                    <td className="border px-4 py-4">{user.emailno}</td>
+                                    <td className="border px-4 py-4">Date Of Admission</td>
+                                    <td className="border px-4 py-4"><Link to={user.id.toString()}><i className="fa-solid fa-pen"></i></Link></td>
+                                    <td className="border px-4 py-4"><i onClick={() =>  handleDelect(user.id)} className="fa-solid fa-trash"></i></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+        <main>
+          <Outlet/>
+        </main>
       </div>
     </div>
   );
